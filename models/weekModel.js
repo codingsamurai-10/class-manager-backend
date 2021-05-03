@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
@@ -8,17 +8,15 @@ const periodSchema = new Schema({
   end: Number
 });
 
-const Period = mongoose.model('Period', periodSchema);
-
 const weekSchema = new Schema({
   weekId: Number,
-  monday: [periodModel],
-  tuesday: [periodModel],
-  wednesday: [periodModel],
-  thursday: [periodModel],
-  friday: [periodModel]
+  monday: [periodSchema],
+  tuesday: [periodSchema],
+  wednesday: [periodSchema],
+  thursday: [periodSchema],
+  friday: [periodSchema]
 }, {collection: 'periodsSchedule'});
 
 const Week = mongoose.model('Week', weekSchema);
 
-export default Week;
+module.exports = Week;
