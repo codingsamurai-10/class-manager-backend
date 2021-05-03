@@ -1,7 +1,14 @@
 import mongoose from 'mongoose';
-import periodModel from './periodModel';
 
 const { Schema } = mongoose;
+
+const periodSchema = new Schema({
+  name: String,
+  start: Number,
+  end: Number
+});
+
+const Period = mongoose.model('Period', periodSchema);
 
 const weekSchema = new Schema({
   weekId: Number,
@@ -10,7 +17,7 @@ const weekSchema = new Schema({
   wednesday: [periodModel],
   thursday: [periodModel],
   friday: [periodModel]
-});
+}, {collection: 'periodsSchedule'});
 
 const Week = mongoose.model('Week', weekSchema);
 
