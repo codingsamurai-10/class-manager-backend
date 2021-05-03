@@ -108,7 +108,7 @@ const getFreeSlotsForBooking = (req, res, next) => {
     })
     .then(jsonResponse => {
       console.log(jsonResponse);
-      res.json(jsonResponse);
+      res.send(jsonResponse);
     });  
 }
 
