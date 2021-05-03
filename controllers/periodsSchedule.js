@@ -57,6 +57,61 @@ const getPeriodsSchedule = (req, res, next) => {
     .then(json => res.send(json));
 };
 
+const getDayFromNumber = num => {
+  switch(num) {
+    case 1: return "monday";
+    case 2: return "tuesday";
+    case 3: return "wednesday";
+    case 4: return "thursday";
+    case 5: return "friday";
+  }
+}
+
+const findAllFittingSlots = (slotsOfGivenDuration, durationWanted, slot) => {
+  const duration = slot.end - slot.start;
+  if(duration < durationWanted) return;
+  if(duration == durationWanted) {
+    slotsOfGivenDuration.push(slot);
+    return;
+  }
+  slotsOfGivenDuration.push({start: slot.start, end: slot.start + durationWanted * 1}); // * 1 is intended to force JS to treat durationWanted as a number
+  const newSlot = {start: slot.start + 1, end: slot.end};
+  findAllFittingSlots(slotsOfGivenDuration, durationWanted, newSlot);
+}
+
+const findSlotsOfGivenDuration = (freeSlots, duration) => {
+  let slotsOfGivenDuration = [];
+  for(let i = 0; i < freeSlots.length; ++i) {
+    findAllFittingSlots(slotsOfGivenDuration, duration, freeSlots[i]);
+  }
+  return slotsOfGivenDuration;
+}
+
+const getFreeSlotsForBooking = (req, res, next) => {
+  const slotDuration = req.body.slotDurationWanted;
+  console.log(req.body.dateOfSlotWanted);
+  const slotDate = new Date(req.body.dateOfSlotWanted);
+  const diffTime = Math.abs(new Date() - slotDate);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  let weekId = 2;
+  if(diffDays < 7) weekId = 1;
+  let dayOfSlot = getDayFromNumber(slotDate.getDay());
+
+  weekModel.findOne({ weekId: weekId })
+    .then(data => {
+      return findFreeSlots(data[dayOfSlot]);
+    })
+    .then(slots => {
+      const slotsOfGivenDuration = findSlotsOfGivenDuration(slots, slotDuration);
+      return JSON.stringify(slotsOfGivenDuration);
+    })
+    .then(jsonResponse => {
+      console.log(jsonResponse);
+      res.json(jsonResponse);
+    });  
+}
+
 module.exports = {
   getPeriodsSchedule,
   getFreeSlotsForBooking
