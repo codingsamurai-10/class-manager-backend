@@ -1,16 +1,40 @@
 const weekModel = require('../models/weekModel');
 
+const findFreeSlots = daySchedule => {
+  let freeSlots = [];
+  if(daySchedule[0].start > 8) freeSlots.push({start: 8, end: daySchedule[0].start});
+  for(let i = 1; i < daySchedule.length; ++i) {
+    if(daySchedule[i].start > daySchedule[i - 1].end) freeSlots.push({start: daySchedule[i - 1].end, end: daySchedule[i].start});
+  }
+  const lastElement = daySchedule[daySchedule.length - 1];
+  if(lastElement.end < 17) freeSlots.push({start: lastElement.end, end: 17});
+  return freeSlots;
+}
+
 const addFreeSlots = daySchedule => {
   let updatedSchedule = [];
-  if(daySchedule[0].start > 8) updatedSchedule.push({name: "free", start: 8, end: daySchedule[0].start});
-  updatedSchedule.push(daySchedule[0]);
-  for(let i = 1; i < daySchedule.length; ++i) {
-    const lastElement = updatedSchedule[updatedSchedule.length - 1];
-    if(lastElement.end < daySchedule[i].start) updatedSchedule.push({name: "free", start: lastElement.end, end: daySchedule.start});
-    updatedSchedule.push(daySchedule[i]);
+  const freeSlots = findFreeSlots(daySchedule);
+  let freeSlotIndex = 0, dayScheduleIndex = 0;
+  while(freeSlotIndex < freeSlots.length && dayScheduleIndex < daySchedule.length) {
+    if(freeSlots[freeSlotIndex].start < daySchedule[dayScheduleIndex].start) {
+      updatedSchedule.push(freeSlots[freeSlotIndex]);
+      freeSlotIndex++;
+    }
+    else {
+      updatedSchedule.push(daySchedule[dayScheduleIndex]);
+      dayScheduleIndex++;
+    }
   }
-  const lastElement = updatedSchedule[updatedSchedule.length - 1];
-  if(lastElement.end < 17) updatedSchedule.push({name: "free", start: lastElement.end, end: 17});
+
+  while(freeSlotIndex < freeSlots.length) {
+    updatedSchedule.push(freeSlots[freeSlotIndex]);
+    freeSlotIndex++;
+  }
+  while(dayScheduleIndex < daySchedule.length) {
+    updatedSchedule.push(daySchedule[dayScheduleIndex]);
+    dayScheduleIndex++;
+  }
+
   return updatedSchedule;
 }
 
@@ -34,5 +58,6 @@ const getPeriodsSchedule = (req, res, next) => {
 };
 
 module.exports = {
-  getPeriodsSchedule
+  getPeriodsSchedule,
+  getFreeSlotsForBooking
 };
