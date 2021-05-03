@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/periodsschedule', periodsScheduleRouter);
+app.use('/periodsSchedule', periodsScheduleRouter);
 app.use('/users', usersRouter);
 
 module.exports = app;
