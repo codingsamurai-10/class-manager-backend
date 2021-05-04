@@ -157,7 +157,26 @@ const bookSlot = (req, res, next) => {
 }
 
 const cancelSlot = (req, res, next) => {
-  
+  const slotDate = new Date(req.body.slotToCancel);
+  const startTime = req.body.hour;
+  const { weekId, dayOfSlot } = getWeekAndDayOfDate(slotDate);
+
+  weekModel.findOne({ weekId: weekId })
+  .then(doc => {
+    const numOfPeriods = doc[dayOfSlot].length;
+    let indexOfPeriodWithGivenStart = 0;
+    for(; indexOfPeriodWithGivenStart < numOfPeriods; ++indexOfPeriodWithGivenStart) {
+      if(doc[dayOfSlot][indexOfPeriodWithGivenStart].start == startTime) break;
+    }
+    if(indexOfPeriodWithGivenStart == numOfPeriods) {
+      res.status(400);
+      res.end();
+    }
+    else {
+      doc[dayOfSlot].splice(indexOfPeriodWithGivenStart, 1);
+      doc.save();
+    }
+  })
 }
 
 module.exports = {
