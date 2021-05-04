@@ -90,12 +90,14 @@ const findSlotsOfGivenDuration = (freeSlots, duration) => {
   return slotsOfGivenDuration;
 }
 
+const getFirstDayOfWeekFromDate = date => {
+  return date.getDate() - date.getDay() + 1;
+}
+
 const getWeekAndDayOfDate = (date) => {
-  const diffTime = Math.abs(new Date() - date);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
   let weekId = 2;
-  if(diffDays < 7) weekId = 1;
+  if(getFirstDayOfWeekFromDate(date) == getFirstDayOfWeekFromDate(new Date())) weekId = 1;
+
   let dayOfSlot = getDayFromNumber(date.getDay());
   return {weekId, dayOfSlot};
 }
