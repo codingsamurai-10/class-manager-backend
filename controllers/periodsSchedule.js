@@ -50,7 +50,7 @@ const preprocessTimeTable = data => {
 }
 
 const getPeriodsSchedule = (req, res, next) => {
-  weekModel.findOne({ weekId: 0 })
+  weekModel.findOne({ weekId: 2 })
     .then(data => {
       return preprocessTimeTable(data);
     })
@@ -138,7 +138,7 @@ const bookSlot = (req, res, next) => {
   weekModel.findOne({ weekId: weekId })
     .then(doc => {
       try {
-        doc[dayOfSlot].push(newSlot);
+        doc[dayOfSlot].splice(indexToInsert, 0, newSlot);
       }
       catch(err) {
         res.status(400);
@@ -175,6 +175,8 @@ const cancelSlot = (req, res, next) => {
     else {
       doc[dayOfSlot].splice(indexOfPeriodWithGivenStart, 1);
       doc.save();
+      res.status(200);
+      res.end();
     }
   })
 }
