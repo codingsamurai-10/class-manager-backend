@@ -156,8 +156,13 @@ const bookSlot = (req, res, next) => {
     });
 }
 
+const cancelSlot = (req, res, next) => {
+  
+}
+
 module.exports = {
   getPeriodsSchedule,
   getFreeSlotsForBooking,
-  bookSlot
+  bookSlot,
+  cancelSlot
 };
