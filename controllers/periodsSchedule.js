@@ -112,12 +112,33 @@ const getFreeSlotsForBooking = (req, res, next) => {
       return JSON.stringify(slotsOfGivenDuration);
     })
     .then(jsonResponse => {
-      console.log(jsonResponse);
       res.send(jsonResponse);
     });  
 }
 
 const bookSlot = (req, res, next) => {
+  const subjectName = req.body.subjectName;
+  const slotDate = new Date(req.body.dateOfSlotWanted);
+  const slotTime = req.body.slotSelected;
+  const duration = req.body.slotDurationWanted;
+  
+  const { weekId, dayOfSlot } = getWeekAndDayOfDate(slotDate);
+
+  const newSlot = {
+    name: subjectName,
+    start: slotTime,
+    end: slotTime + duration * 1
+  };
+
+  weekModel.findOne({ weekId: weekId })
+    .then(doc => {
+      doc[dayOfSlot].push(newSlot);
+      doc.save()
+      .then(doc => {
+        res.status(200);
+        res.send('Booked your slot successfully!');
+      });
+    });
 }
 
 module.exports = {
