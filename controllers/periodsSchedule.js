@@ -87,16 +87,21 @@ const findSlotsOfGivenDuration = (freeSlots, duration) => {
   return slotsOfGivenDuration;
 }
 
-const getFreeSlotsForBooking = (req, res, next) => {
-  const slotDuration = req.body.slotDurationWanted;
-  console.log(req.body.dateOfSlotWanted);
-  const slotDate = new Date(req.body.dateOfSlotWanted);
-  const diffTime = Math.abs(new Date() - slotDate);
+const getWeekAndDayOfDate = (date) => {
+  const diffTime = Math.abs(new Date() - date);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
   let weekId = 2;
   if(diffDays < 7) weekId = 1;
-  let dayOfSlot = getDayFromNumber(slotDate.getDay());
+  let dayOfSlot = getDayFromNumber(date.getDay());
+  return {weekId, dayOfSlot};
+}
+
+const getFreeSlotsForBooking = (req, res, next) => {
+  const slotDuration = req.body.slotDurationWanted;
+  const slotDate = new Date(req.body.dateOfSlotWanted);
+  
+  const { weekId, dayOfSlot } = getWeekAndDayOfDate(slotDate);
 
   weekModel.findOne({ weekId: weekId })
     .then(data => {
@@ -112,7 +117,11 @@ const getFreeSlotsForBooking = (req, res, next) => {
     });  
 }
 
+const bookSlot = (req, res, next) => {
+}
+
 module.exports = {
   getPeriodsSchedule,
-  getFreeSlotsForBooking
+  getFreeSlotsForBooking,
+  bookSlot
 };
