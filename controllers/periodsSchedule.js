@@ -1,6 +1,9 @@
 const weekModel = require('../models/weekModel');
 
 const findFreeSlots = daySchedule => {
+  if(daySchedule.length == 0) {
+    return [{start: 8, end: 17}];
+  }
   let freeSlots = [];
   if(daySchedule[0].start > 8) freeSlots.push({start: 8, end: daySchedule[0].start});
   for(let i = 1; i < daySchedule.length; ++i) {
