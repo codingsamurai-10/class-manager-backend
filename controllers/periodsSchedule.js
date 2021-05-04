@@ -135,11 +135,21 @@ const bookSlot = (req, res, next) => {
 
   weekModel.findOne({ weekId: weekId })
     .then(doc => {
-      doc[dayOfSlot].push(newSlot);
+      try {
+        doc[dayOfSlot].push(newSlot);
+      }
+      catch(err) {
+        res.status(400);
+        res.end();
+      }
       doc.save()
-      .then(doc => {
+      .then(() => {
         res.status(200);
-        res.send('Booked your slot successfully!');
+        res.end();
+      })
+      .catch(() => {
+        res.status(400);
+        res.end();
       });
     });
 }
