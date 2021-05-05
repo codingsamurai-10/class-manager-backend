@@ -174,6 +174,7 @@ const cancelSlot = (req, res, next) => {
 
   weekModel.findOne({ weekId: weekId })
   .then(doc => {
+    if(!doc) throw "Document not found";
     const numOfPeriods = doc[dayOfSlot].length;
     let indexOfPeriodWithGivenStart = 0;
     for(; indexOfPeriodWithGivenStart < numOfPeriods; ++indexOfPeriodWithGivenStart) {
@@ -190,6 +191,10 @@ const cancelSlot = (req, res, next) => {
       res.end();
     }
   })
+  .catch(() => {
+    res.status(400);
+    res.end();
+  });
 }
 
 module.exports = {
