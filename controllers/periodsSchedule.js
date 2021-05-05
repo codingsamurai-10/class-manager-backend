@@ -121,6 +121,16 @@ const getFreeSlotsForBooking = (req, res, next) => {
     });  
 }
 
+const compareByStartTime = (slot1, slot2) => {
+  if (slot1.start > slot2.start) {
+    return 1;
+  }
+  if (slot1.start < slot2.start) {
+    return -1;
+  }
+  return 0;
+}
+
 const bookSlot = (req, res, next) => {
   const subjectName = req.body.subjectName;
   const slotDate = new Date(req.body.dateOfSlotWanted);
@@ -138,7 +148,8 @@ const bookSlot = (req, res, next) => {
   weekModel.findOne({ weekId: weekId })
     .then(doc => {
       try {
-        doc[dayOfSlot].splice(indexToInsert, 0, newSlot);
+        doc[dayOfSlot].push(newSlot);        
+        doc[dayOfSlot].sort(compareByStartTime);
       }
       catch(err) {
         res.status(400);
