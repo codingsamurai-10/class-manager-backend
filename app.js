@@ -10,7 +10,6 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const periodsScheduleRouter = require('./routes/periodsSchedule');
 const authRouter = require('./routes/auth');
-const profileRouter = require('./routes/profile');
 
 const app = express();
 
