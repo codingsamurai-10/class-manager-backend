@@ -7,7 +7,7 @@ router.get('/google', passport.authenticate('google', {
 }));
 
 router.get('/google/redirect', passport.authenticate('google'), (req, res, next) => {
-  console.log('here');
+  res.redirect('http://localhost:3000');
 });
 
 router.get('/logout', (req, res, next) => {
