@@ -3,6 +3,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -10,6 +12,14 @@ const periodsScheduleRouter = require('./routes/periodsSchedule');
 const authRouter = require('./routes/auth');
 
 const app = express();
+
+app.use(cookieSession({
+    keys: [process.env.COOKIE_KEY],
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 require('dotenv').config();
 require('./db.js');
