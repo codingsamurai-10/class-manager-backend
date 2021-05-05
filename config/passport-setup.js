@@ -22,7 +22,6 @@ passport.use(
     userModel.findOne({ googleId: profile.id })
       .then(user => {
         if (user) {
-          console.log('old user found');
           done(null, user);
         }
         else {
