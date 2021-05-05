@@ -10,8 +10,12 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const periodsScheduleRouter = require('./routes/periodsSchedule');
 const authRouter = require('./routes/auth');
+const profileRouter = require('./routes/profile');
 
 const app = express();
+
+require('dotenv').config();
+require('./db.js');
 
 app.use(cookieSession({
     keys: [process.env.COOKIE_KEY],
@@ -20,9 +24,6 @@ app.use(cookieSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-require('dotenv').config();
-require('./db.js');
 
 const passportSetup = require('./config/passport-setup');
 
