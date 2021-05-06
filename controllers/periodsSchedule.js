@@ -50,6 +50,7 @@ const preprocessTimeTable = data => {
 }
 
 const getPeriodsSchedule = (req, res, next) => {
+  console.log(req.user);
   weekModel.findOne({ weekId: 2 })
     .then(data => {
       return preprocessTimeTable(data);
