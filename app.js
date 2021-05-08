@@ -9,6 +9,7 @@ const passport = require('passport');
 const periodsScheduleRouter = require('./routes/periodsSchedule');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
+const notifRouter = require('./routes/notif');
 
 require('dotenv').config();
 require('./db.js');
@@ -36,5 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/periodsSchedule', periodsScheduleRouter);
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
+app.use('/Notifications', notifRouter)
 
 module.exports = app;
