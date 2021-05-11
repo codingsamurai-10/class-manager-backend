@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieSession({
-    keys: ['ABC'],
+    keys: [process.env.COOKIE_KEY],
     maxAge: 30 * 24 * 60 * 60 * 1000,
 }));
 
