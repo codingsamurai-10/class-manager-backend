@@ -6,13 +6,14 @@ const authCheck = (req, res, next) => {
     next();
   }
   else {
-    res.redirect('/auth/google');
+    res.send(null);
   }
 }
 
 router.get('/', authCheck, (req, res, next) => {
-  res.send(req.user);
-  res.end();
+  const userData = { username: req.user.username, admin: req.user.admin };
+  const json = JSON.stringify(userData);
+  res.send(json);
 });
 
 module.exports = router;
