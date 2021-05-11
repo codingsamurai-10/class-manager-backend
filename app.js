@@ -11,7 +11,6 @@ require('./db.js');
 const passportSetup = require('./config/passport-setup');
 
 const app = express();
-app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
