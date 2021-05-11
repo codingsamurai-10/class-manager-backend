@@ -1,4 +1,5 @@
 const weekModel = require('../models/weekModel');
+const notifModel = require('../models/notifModel');
 
 const findFreeSlots = daySchedule => {
   if (daySchedule.length == 0) {
@@ -160,6 +161,15 @@ const bookSlot = (req, res, next) => {
         .then(() => {
           res.status(200);
           res.end();
+          notifModel.create(
+            {
+              subject: newSlot.name,
+              time: newSlot.start.toString() + ":00",
+              date: slotDate.getDate() + "/" + slotDate.getMonth()+"/" + slotDate.getFullYear(),
+              cancelled: false
+            }, (err, res)=>{
+              if(err) console.log(err);
+            })
         })
         .catch(() => {
           res.status(400);
@@ -172,14 +182,17 @@ const cancelSlot = (req, res, next) => {
   const slotDate = new Date(req.body.slotToCancel);
   const startTime = req.body.hour;
   const { weekId, dayOfSlot } = getWeekAndDayOfDate(slotDate);
-
+  let subname;
   weekModel.findOne({ weekId: weekId })
     .then(doc => {
       if (!doc) throw "Document not found";
       const numOfPeriods = doc[dayOfSlot].length;
       let indexOfPeriodWithGivenStart = 0;
       for (; indexOfPeriodWithGivenStart < numOfPeriods; ++indexOfPeriodWithGivenStart) {
-        if (doc[dayOfSlot][indexOfPeriodWithGivenStart].start == startTime) break;
+        if (doc[dayOfSlot][indexOfPeriodWithGivenStart].start == startTime) {
+          subname = doc[dayOfSlot][indexOfPeriodWithGivenStart].name;
+          break;
+        };
       }
       if (indexOfPeriodWithGivenStart == numOfPeriods) {
         res.status(400);
@@ -190,6 +203,15 @@ const cancelSlot = (req, res, next) => {
         doc.save();
         res.status(200);
         res.end();
+        notifModel.create(
+            {
+              subject: subname,
+              time: startTime.toString() + ":00",
+              date: slotDate.getDate() + "/" + slotDate.getMonth()+"/" + slotDate.getFullYear(),
+              cancelled: true
+            }, (err, res)=>{
+              if(err) console.log(err);
+            })
       }
     })
     .catch(() => {
