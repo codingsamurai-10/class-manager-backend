@@ -5,7 +5,8 @@ const getNotifications = async (req, res) => {
         const data = await notifModel.find({}).sort({ _id: -1}).exec();
         res.send(data);
     } catch (err) {
-        console.log(err);
+        res.status(500);
+        res.end();
     }
 }
 
