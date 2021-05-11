@@ -2,7 +2,7 @@ const schedule = require('node-schedule');
 const weekModel = require('./models/weekModel');
 const mongoose = require('mongoose');
 
-const job = schedule.scheduleJob('39 11 * * 2', () => {
+const job = schedule.scheduleJob('0 0 * * 6', () => {
   weekModel.findOneAndDelete({ weekId: 1 })
   .then(doc => console.log(doc));
 
