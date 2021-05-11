@@ -10,6 +10,7 @@ const periodsScheduleRouter = require('./routes/periodsSchedule');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const notifRouter = require('./routes/notif');
+const changeWeekId = require('./scheduleWeekIdChange.js');
 
 require('dotenv').config();
 require('./db.js');
