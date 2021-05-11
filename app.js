@@ -11,6 +11,7 @@ require('./db.js');
 const passportSetup = require('./config/passport-setup');
 
 const app = express();
+const inProduction = process.env.NODE_ENV === 'production';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -22,7 +23,7 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(logger('dev'));
+if(!inProduction) app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const periodsScheduleRouter = require('./routes/periodsSchedule');
@@ -36,7 +37,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/Notifications', notifRouter)
 
-if(process.env.NODE_ENV === 'production') {
+if(inProduction) {
     app.use(express.static('build'));
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'build', 'index.html'));

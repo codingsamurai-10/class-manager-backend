@@ -100,6 +100,7 @@ const getWeekAndDayOfDate = (date) => {
   if (getFirstDayOfWeekFromDate(date) == getFirstDayOfWeekFromDate(new Date())) weekId = 1;
 
   let dayOfSlot = getDayFromNumber(date.getDay());
+  console.log("================================================================", dayOfSlot, "================================================================");
   return { weekId, dayOfSlot };
 }
 
