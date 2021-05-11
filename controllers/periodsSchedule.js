@@ -95,12 +95,20 @@ const getFirstDayOfWeekFromDate = date => {
   return date.getDate() - date.getDay() + 1;
 }
 
+const convertToIST = date => {
+  date.setHours(date.getHours() + 9);
+  date.setMinutes(date.getMinutes() + 30);
+  return date;
+}
+
 const getWeekAndDayOfDate = (date) => {
+  date = convertToIST(date);
+  const currentDate = convertToIST(new Date());
+
   let weekId = 2;
-  if (getFirstDayOfWeekFromDate(date) == getFirstDayOfWeekFromDate(new Date())) weekId = 1;
+  if (getFirstDayOfWeekFromDate(date) == getFirstDayOfWeekFromDate(currentDate)) weekId = 1;
 
   let dayOfSlot = getDayFromNumber(date.getDay());
-  console.log("================================================================", dayOfSlot, "================================================================");
   return { weekId, dayOfSlot };
 }
 
