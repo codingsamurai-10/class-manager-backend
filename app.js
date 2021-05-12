@@ -1,24 +1,20 @@
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 
-const periodsScheduleRouter = require('./routes/periodsSchedule');
-const authRouter = require('./routes/auth');
-const profileRouter = require('./routes/profile');
-const notifRouter = require('./routes/notif');
-const changeWeekId = require('./scheduleWeekIdChange.js');
-
 require('dotenv').config();
 require('./db.js');
 
-const app = express();
-app.use(cors());
+const passportSetup = require('./config/passport-setup');
 
-app.use(cookieParser());
+const app = express();
+const inProduction = process.env.NODE_ENV === 'production';
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieSession({
     keys: [process.env.COOKIE_KEY],
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -27,17 +23,25 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const passportSetup = require('./config/passport-setup');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+if(!inProduction) app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/periodsSchedule', periodsScheduleRouter);
-app.use('/auth', authRouter);
-app.use('/profile', profileRouter);
-app.use('/Notifications', notifRouter)
+const periodsScheduleRouter = require('./routes/periodsSchedule');
+const authRouter = require('./routes/auth');
+const profileRouter = require('./routes/profile');
+const notifRouter = require('./routes/notif');
+const changeWeekId = require('./scheduleWeekIdChange.js');
+
+app.use('/api/periodsSchedule', periodsScheduleRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/profile', profileRouter);
+app.use('/api/Notifications', notifRouter)
+
+if(inProduction) {
+    app.use(express.static('build'));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+    });
+}
 
 module.exports = app;

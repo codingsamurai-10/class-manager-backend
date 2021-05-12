@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.css","webpack://src/App.css"],"names":[],"mappings":"AAAA,EACE,QAAS,CCAP,qBDCJ,CCEA,iBACI,wBAAyB,CACzB,YACJ","file":"main.a3112bdf.chunk.css","sourcesContent":["*{\n  margin: 0;\n}","* {\n    box-sizing: border-box;\n}\n\n.time-table-cell {\n    border: 1px solid #3b3b3b;\n    height: 7.5em;\n}"]}
