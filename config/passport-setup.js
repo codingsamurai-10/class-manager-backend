@@ -20,7 +20,6 @@ passport.use(
     callbackURL: '/api/auth/google/redirect',
     proxy: true
   }, (accessToken, refreshToken, profile, done) => {
-    console.log(profile.emails[0].value);
     userModel.findOne({ googleId: profile.id })
       .then(user => {
         if (user) {
