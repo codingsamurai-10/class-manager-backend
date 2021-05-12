@@ -7,7 +7,8 @@ const userSchema = new Schema({
   admin: {
     type: Boolean,
     default: false
-  }
+  },
+  email: String
 }, { collection: 'users' });
 
 const User = mongoose.model('User', userSchema);
