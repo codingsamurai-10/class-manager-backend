@@ -1,5 +1,6 @@
 const weekModel = require('../models/weekModel');
 const notifModel = require('../models/notifModel');
+const sendMail = require('../controllers/sendMail')
 
 const findFreeSlots = daySchedule => {
   if (daySchedule.length == 0) {
@@ -169,15 +170,17 @@ const bookSlot = (req, res, next) => {
         .then(() => {
           res.status(200);
           res.end();
+          let bookChanges = {
+            subject: newSlot.name,
+            time: newSlot.start.toString() + ":00",
+            date: slotDate.getDate() + "/" + slotDate.getMonth() + "/" + slotDate.getFullYear(),
+            cancelled: false
+          }
           notifModel.create(
-            {
-              subject: newSlot.name,
-              time: newSlot.start.toString() + ":00",
-              date: slotDate.getDate() + "/" + slotDate.getMonth()+"/" + slotDate.getFullYear(),
-              cancelled: false
-            }, (err, res)=>{
-              if(err) console.log(err);
+            bookChanges, (err, res) => {
+              if (err) console.log(err);
             })
+          sendMail(bookChanges)
         })
         .catch(() => {
           res.status(400);
@@ -211,15 +214,17 @@ const cancelSlot = (req, res, next) => {
         doc.save();
         res.status(200);
         res.end();
+        let cancelChanges = {
+          subject: subname,
+          time: startTime.toString() + ":00",
+          date: slotDate.getDate() + "/" + slotDate.getMonth() + "/" + slotDate.getFullYear(),
+          cancelled: true
+        }
         notifModel.create(
-            {
-              subject: subname,
-              time: startTime.toString() + ":00",
-              date: slotDate.getDate() + "/" + slotDate.getMonth()+"/" + slotDate.getFullYear(),
-              cancelled: true
-            }, (err, res)=>{
-              if(err) console.log(err);
-            })
+          changes, (err, res) => {
+            if (err) console.log(err);
+          })
+        sendMail(cancelChanges)
       }
     })
     .catch(() => {
