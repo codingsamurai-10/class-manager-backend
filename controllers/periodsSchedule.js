@@ -221,7 +221,7 @@ const cancelSlot = (req, res, next) => {
           cancelled: true
         }
         notifModel.create(
-          changes, (err, res) => {
+          cancelChanges, (err, res) => {
             if (err) console.log(err);
           })
         sendMail(cancelChanges)
