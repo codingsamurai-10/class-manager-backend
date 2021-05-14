@@ -1,6 +1,7 @@
 const weekModel = require('../models/weekModel');
 const notifModel = require('../models/notifModel');
 const sendMail = require('../controllers/sendMail')
+const sendMessageTele = require('../controllers/teleBot')
 
 const findFreeSlots = daySchedule => {
   if (daySchedule.length == 0) {
@@ -181,6 +182,7 @@ const bookSlot = (req, res, next) => {
               if (err) console.log(err);
             })
           sendMail(bookChanges)
+          sendMessageTele(bookChanges)
         })
         .catch(() => {
           res.status(400);
@@ -225,6 +227,7 @@ const cancelSlot = (req, res, next) => {
             if (err) console.log(err);
           })
         sendMail(cancelChanges)
+        sendMessageTele(cancelChanges)
       }
     })
     .catch(() => {
