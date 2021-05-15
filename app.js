@@ -6,6 +6,7 @@ const passport = require('passport');
 
 require('dotenv').config();
 require('./db.js');
+require('./controllers/teleBot')
 
 const passportSetup = require('./config/passport-setup');
 
