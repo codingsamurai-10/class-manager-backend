@@ -6,7 +6,7 @@ const userSchema = new Schema({
   username: String,
   admin: {
     type: Boolean,
-    default: false
+    default: true
   },
   email: String
 }, { collection: 'users' });
